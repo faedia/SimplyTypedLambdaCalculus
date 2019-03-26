@@ -1,0 +1,23 @@
+cabal-version: >=1.10
+name: stlc
+version: 0.1.0.0
+license: BSD3
+license-file: LICENSE
+maintainer: t97steven@gmail.com
+author: Steven Tomlinson
+category: Language
+build-type: Simple
+extra-source-files:
+    CHANGELOG.md
+
+executable stlc
+    main-is: Main.hs
+    hs-source-dirs: src
+    other-modules:
+        Lang.Ast
+        Parser.Lexer
+    default-language: Haskell2010
+    build-depends:
+        base >=4.12 && <4.13,
+        array -any,
+        containers -any

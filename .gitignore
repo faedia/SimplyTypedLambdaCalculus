@@ -1,0 +1,7 @@
+stack.yaml
+.ghc.environment*
+cabal.project.local*
+jetgen
+.stack-work/
+dist/
+dist-newstyle/

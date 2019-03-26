@@ -1,0 +1,19 @@
+{
+\{-# Language FlexibleContexts #-\}
+module TypeCheck where
+
+import Data.Map (Map)
+import qualified Data.Map as M
+import JetContext
+import Ast
+
+type Context = JetContextMap Id Type
+}
+
+typerule TLitBool <- {return ()} |- (Literal LitBool b) TBool;
+typerule TLitInt <- {return ()} |- (Literal LitInt n) TInt;
+
+typerule TExprVar <- if {t <- lookupContext var ctx} then {return ()} |- (Expr Var var) t;
+typerule TExprLit <- if {ctx} |- (Literal k) t then {return ()} |- (Expr Lit k) t;
+typerule TExprApp <- if {ctx} |- (Expr e1) TFun t1 t2, {ctx} |- (Expr e2) t1 then {return ()} |- (Expr App e1 e2) t2;
+typerule TExprLam <- if {ctx' <- expandContext var t1 (newBlock ctx)}, {ctx'} |- (Expr e) t2 then {return ()} |- (Expr Lam var t1 e) TFun t1 t2;
