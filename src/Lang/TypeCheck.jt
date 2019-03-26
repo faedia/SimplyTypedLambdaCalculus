@@ -2,6 +2,7 @@
 \{-# Language FlexibleContexts #-\}
 module TypeCheck where
 
+import Debug.Trace
 import Data.Map (Map)
 import qualified Data.Map as M
 import JetContext
