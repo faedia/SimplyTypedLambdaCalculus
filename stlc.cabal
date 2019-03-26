@@ -14,6 +14,8 @@ executable stlc
     main-is: Main.hs
     hs-source-dirs: src, gen
     other-modules:
+        JetContext
+        JetErrorM
         Lang.Ast
         TypeCheck
         Parser.Lexer
