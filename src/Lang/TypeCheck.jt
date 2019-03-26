@@ -5,7 +5,7 @@ module TypeCheck where
 import Data.Map (Map)
 import qualified Data.Map as M
 import JetContext
-import Ast
+import Lang.Ast
 
 type Context = JetContextMap Id Type
 }

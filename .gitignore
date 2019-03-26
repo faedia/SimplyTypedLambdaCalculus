@@ -5,3 +5,4 @@ jetgen
 .stack-work/
 dist/
 dist-newstyle/
+gen/

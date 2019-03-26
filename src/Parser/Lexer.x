@@ -9,17 +9,18 @@ $alpha = [a-zA-Z]		-- alphabetic characters
 
 tokens :-
     $white+	;
-    true {\p s -> TokTrue}
-    false {\p s -> TokFalse}
-    Bool {\p s -> TokTBool}
-    Int {\p s -> TokTInt}
-    $digit+				{ \p s -> TokInt (read s) }
-    $alpha [$alpha $digit \_ \']*		{ \p s -> TokVar s }
-    \\ {\p s -> TokLambda}
-    \-> {\p s -> TokArrow}
-    \. {\p s -> TokDot}
-    \( {\p s -> TokLBrac}
-    \) {\p s -> TokRBrac}
+    true                            { \p s -> TokTrue }
+    false                           { \p s -> TokFalse }
+    Bool                            { \p s -> TokTBool }
+    Int                             { \p s -> TokTInt }
+    $digit+				            { \p s -> TokInt (read s) }
+    $alpha [$alpha $digit \_ \']*   { \p s -> TokVar s }
+    \\                              { \p s -> TokLambda }
+    \->                             { \p s -> TokArrow }
+    \.                              { \p s -> TokDot }
+    \(                              { \p s -> TokLBrace }
+    \)                              { \p s -> TokRBrace }
+    :                               { \p s -> TokColon }
 
 {
 data Token 
@@ -32,7 +33,8 @@ data Token
     | TokTBool
     | TokTInt
     | TokDot
-    | TokLBrac
-    | TokRBrac
+    | TokLBrace
+    | TokRBrace
+    | TokColon
     deriving (Show)
 }

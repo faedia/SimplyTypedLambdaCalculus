@@ -3,7 +3,7 @@ module Lang.Ast where
 newtype Id = Id String deriving (Eq, Ord, Show, Read)
 
 data Literal 
-    = LitInt Integer
+    = LitInt Int
     | LitBool Bool
     deriving (Eq, Ord, Show, Read)
 
