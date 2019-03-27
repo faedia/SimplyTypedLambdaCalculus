@@ -1,5 +1,7 @@
 {
 module Parser.Lexer where
+
+import JetErrorM
 }
 
 %wrapper "posn"
@@ -37,4 +39,17 @@ data Token
     | TokRBrace
     | TokColon
     deriving (Show)
+
+stlcLex :: String -> JetError [Token]
+stlcLex s = go (alexStartPos, '\n', [], s)
+    where
+        go inp@(pos, _, bl, str') = 
+            case alexScan inp 0 of
+                AlexEOF -> return []
+                AlexError inp' -> Fail "Lex Error"
+                AlexSkip inp' _ -> go inp'
+                AlexToken inp' len act -> do
+                    let tok = act pos (take len str')
+                    toks <- go inp'
+                    return (tok : toks)
 }

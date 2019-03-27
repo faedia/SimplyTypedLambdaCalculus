@@ -4,9 +4,12 @@ module TypeCheck where
 
 import Debug.Trace
 import JetContext
+import JetErrorM
 import Lang.Ast
 
 type Context = JetContextMap Id Type
+makeCheckError _ _ _ = "Type Error"
+makeInferError _ _ = "Type Error"
 }
 
 typerule TLitBool <- (Literal LitBool b) : TBool return {return ()};
