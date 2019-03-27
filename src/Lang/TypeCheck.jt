@@ -15,7 +15,7 @@ makeInferError _ _ = "Type Error"
 typerule TLitBool <- (Literal LitBool b) : TBool return {return ()};
 typerule TLitInt <- (Literal LitInt n) : TInt return {return ()};
 
-typerule TExprVar <- if {t <- lookupContext var ctx} then (Expr Var var) : t return {return ()};
-typerule TExprLit <- if {ctx} |- (Literal k) : t then (Expr Lit k) : t return {return ()} ;
+typerule TExprVar <- if {t <- lookupContext var ctx} then (Expr Var loc var) : t return {return ()};
+typerule TExprLit <- if {ctx} |- (Literal k) : t then (Expr Lit pos k) : t return {return ()} ;
 typerule TExprApp <- if {ctx} |- (Expr e1) : TFun t1 t2, {ctx} |- (Expr e2) : t1 then (Expr App e1 e2) : t2 return {return ()};
 typerule TExprLam <- if {=<< expandContext var t1 (newBlock ctx)} |- (Expr e) : t2 then (Expr Lam var t1 e) : TFun t1 t2 return {return ()};

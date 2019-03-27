@@ -9,20 +9,21 @@ import JetErrorM
 %tokentype { Token }
 %monad { JetError } { (>>=) } { return }
 %error { parseError }
+--%lexer { stlcLex } { TokEOF _ }
 
 %token
-    true            { TokTrue }
-    false           { TokFalse }
-    Bool            { TokTBool }
-    Int             { TokTInt }
-    int_literal	    { TokInt $$ }
-    var		        { TokVar $$ }
-    "\\"            { TokLambda }
-    "->"            { TokArrow }
-    "."             { TokDot }
-    "("             { TokLBrace }
-    ")"             { TokRBrace }
-    ":"             { TokColon }
+    true            { TokTrue $$ }
+    false           { TokFalse $$ }
+    Bool            { TokTBool _ }
+    Int             { TokTInt _ }
+    int_literal	    { TokInt pos $$ }
+    var		        { TokVar pos $$ }
+    "\\"            { TokLambda _ }
+    "->"            { TokArrow _ }
+    "."             { TokDot _ }
+    "("             { TokLBrace _ }
+    ")"             { TokRBrace _ }
+    ":"             { TokColon _ }
 %right "->"
 %%
 
@@ -32,10 +33,10 @@ Expr    : "\\" var ":" Type "." Expr    { Lam (Id $2) $4 $6 }
 AppExpr : AppExpr AppRhs                { App $1 $2 }
         | AppRhs                        { $1 }
 
-AppRhs  : var                           { Var (Id $1) }
-        | int_literal                   { Lit (LitInt $1) }
-        | true                          { Lit (LitBool True) }
-        | false                         { Lit (LitBool False) }
+AppRhs  : var                           { Var pos (Id $1) }
+        | int_literal                   { Lit pos (LitInt $1) }
+        | true                          { Lit $1 (LitBool True) }
+        | false                         { Lit $1 (LitBool False) }
         | "(" Expr ")"                  { $2 }
 
 Type    : Int               { TInt }
@@ -46,5 +47,7 @@ Type    : Int               { TInt }
 
 {
 parseError :: [Token] -> JetError a
-parseError _ = Fail "Parse error"
+parseError [tok] = let loc = getLoc tok in
+    Fail ("Parse Error " ++ show (fst loc) ++ ":" ++ show (snd loc) ++ " found unexpected \"" ++ show tok ++ "\"")
+parseError toks = Fail ("Unexpected end of input")
 }

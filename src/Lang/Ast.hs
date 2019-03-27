@@ -1,6 +1,8 @@
 module Lang.Ast where
 
-newtype Id = Id String deriving (Eq, Ord, Show, Read)
+import Parser.Lexer
+
+data Id = Id String deriving (Eq, Ord, Show, Read)
 
 data Literal 
     = LitInt Int
@@ -8,11 +10,11 @@ data Literal
     deriving (Eq, Ord, Show, Read)
 
 data Expr 
-    = Var Id
-    | Lit Literal
+    = Var AlexPosn Id
+    | Lit AlexPosn Literal
     | App Expr Expr
     | Lam Id Type Expr
-    deriving (Eq, Ord, Show, Read)
+    deriving (Eq, Show)
 
 data Type
     = TInt
