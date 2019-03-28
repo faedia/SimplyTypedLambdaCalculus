@@ -7,6 +7,7 @@ data Id = Id String deriving (Eq, Ord, Show, Read)
 data Literal 
     = LitInt Int
     | LitBool Bool
+    | LitUnit
     deriving (Eq, Ord, Show, Read)
 
 data Expr 
@@ -14,10 +15,13 @@ data Expr
     | Lit AlexPosn Literal
     | App Expr Expr
     | Lam Id Type Expr
+    | Let Id Expr Expr
+    | If Expr Expr Expr
     deriving (Eq, Show)
 
 data Type
     = TInt
     | TBool
+    | TUnit
     | TFun Type Type
     deriving (Eq, Ord, Show, Read)

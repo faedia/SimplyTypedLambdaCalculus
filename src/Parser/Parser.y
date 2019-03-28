@@ -18,12 +18,19 @@ import JetErrorM
     Int             { TokTInt _ }
     int_literal	    { TokInt pos $$ }
     var		        { TokVar pos $$ }
+    if              { TokIf _}
+    then            { TokThen _}
+    else            { TokElse _}
+    let             { TokLet _}
+    in              { TokIn _}
     "\\"            { TokLambda _ }
     "->"            { TokArrow _ }
     "."             { TokDot _ }
     "("             { TokLBrace _ }
     ")"             { TokRBrace _ }
     ":"             { TokColon _ }
+    "="             { TokEq _ }
+
 %right "->"
 %%
 
@@ -37,11 +44,15 @@ AppRhs  : var                           { Var pos (Id $1) }
         | int_literal                   { Lit pos (LitInt $1) }
         | true                          { Lit $1 (LitBool True) }
         | false                         { Lit $1 (LitBool False) }
+        | "(" ")"                       { Lit (AlexPn 0 0 0) LitUnit }
+        | if Expr then Expr else Expr   { If $2 $4 $6 }
+        | let var "=" Expr in Expr      { Let (Id $2) $4 $6 }
         | "(" Expr ")"                  { $2 }
 
 Type    : Int               { TInt }
         | Bool              { TBool }
         | Type "->" Type    { TFun $1 $3 }
+        | "(" ")"           { TUnit }
         | "(" Type ")"      { $2 }
 
 

@@ -6,24 +6,26 @@ import TypeCheck
 import JetContext
 import JetErrorM
 import Lang.Ast
+import Lang.Pretty
 import System.IO (hSetBuffering, stdout, BufferMode (NoBuffering))
 
-runCmd :: String -> JetError Type
+runCmd :: String -> JetError (Expr, Type)
 runCmd cmd = do
     tokens <- stlcLex cmd
     tree <- stlc tokens
-    inferExpr tree (emptyContext :: Context)
+    t <- inferExpr tree (emptyContext :: Context)
+    return (tree, t)
 
 run :: IO ()
 run = do
-    putStr "λ>"
+    putStr "λ> "
     cmd <- getLine
     case cmd of
         (':':cmd) -> case cmd of
             "q" -> return ()
             _ -> putStrLn ("Unknown command: " ++ cmd) >> run
         _ -> case runCmd cmd of
-            Succ t -> print t >> run
+            Succ (e, t) -> putStrLn (prettyShow e ++ " :: " ++ prettyShow t) >> run
             Fail err -> putStrLn err >> run
 
 main :: IO ()
