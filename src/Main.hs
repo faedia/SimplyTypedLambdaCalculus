@@ -7,28 +7,31 @@ import JetContext
 import JetErrorM
 import Lang.Ast
 import Lang.Pretty
+import Data.Text
 import System.IO (hSetBuffering, stdout, BufferMode (NoBuffering))
 
-runCmd :: String -> JetError (Expr, Type)
-runCmd cmd = do
+runCmd :: Context -> String -> JetError (Expr, Type, Context)
+runCmd ctx cmd = do
     tokens <- stlcLex cmd
     tree <- stlc tokens
     t <- inferExpr tree (emptyContext :: Context)
-    return (tree, t)
+    return (tree, t, ctx)
 
-run :: IO ()
-run = do
+run :: Context -> IO ()
+run ctx = do
     putStr "λ> "
     cmd <- getLine
-    case cmd of
+    let nextRun = run ctx
+    case (unpack . strip . pack) cmd of
         (':':cmd) -> case cmd of
             "q" -> return ()
-            _ -> putStrLn ("Unknown command: " ++ cmd) >> run
-        _ -> case runCmd cmd of
-            Succ (e, t) -> putStrLn (prettyShow e ++ " :: " ++ prettyShow t) >> run
-            Fail err -> putStrLn err >> run
+            _ -> putStrLn ("Unknown command: " ++ cmd) >> nextRun
+        "" -> nextRun
+        _ -> case runCmd ctx cmd of
+            Succ (e, t, ctx') -> putStrLn (prettyShow e ++ " :: " ++ prettyShow t) >> run ctx'
+            Fail err -> putStrLn err >> nextRun
 
 main :: IO ()
 main = do
     hSetBuffering stdout NoBuffering
-    run
+    run emptyContext
