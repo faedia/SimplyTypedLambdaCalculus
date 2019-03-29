@@ -27,3 +27,4 @@ executable stlc
         array -any,
         containers -any,
         text -any
+    build-tools: alex, happy

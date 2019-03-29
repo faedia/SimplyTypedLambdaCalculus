@@ -25,7 +25,7 @@ instance PrettyShow Expr where
             if shouldParenExpr e2 then "(" ++ e2Str ++ ")" else e2Str; in
             e1Str ++ " " ++ e2Str
     prettyShow (Lam var t e) =
-        "λ" ++ prettyShow var ++ " : " ++ prettyShow t ++ " . " ++ prettyShow e
+        "\\" ++ prettyShow var ++ " : " ++ prettyShow t ++ " . " ++ prettyShow e
     prettyShow (Let var e1 e2) = "let " ++ prettyShow var ++ " = " ++ prettyShow e1 ++ " in " ++ prettyShow e2
     -- Here just incase a new Expr is added and a prettyShow function is not written for the new constructor
     prettyShow e = "Write prettyShow! defaulting to show: " ++ show e

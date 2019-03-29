@@ -19,7 +19,7 @@ runCmd ctx cmd = do
 
 run :: Context -> IO ()
 run ctx = do
-    putStr "λ> "
+    putStr "stlc> "
     cmd <- getLine
     let nextRun = run ctx
     case (unpack . strip . pack) cmd of
