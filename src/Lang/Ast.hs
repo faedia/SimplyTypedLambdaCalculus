@@ -5,7 +5,7 @@ import Parser.Lexer
 data Id = Id String deriving (Eq, Ord, Show, Read)
 
 data Literal 
-    = LitInt Int
+    = LitInt Integer
     | LitBool Bool
     | LitUnit
     deriving (Eq, Ord, Show, Read)
@@ -17,6 +17,10 @@ data Expr
     | Lam Id Type Expr
     | Let Id Expr Expr
     | If Expr Expr Expr
+    | Fix Expr
+    | Pred Expr
+    | ESucc Expr
+    | Iszero Expr
     deriving (Eq, Show)
 
 data Type

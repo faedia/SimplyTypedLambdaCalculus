@@ -23,6 +23,10 @@ import JetErrorM
     else            { TokElse _}
     let             { TokLet _}
     in              { TokIn _}
+    fix             { TokFix _ }
+    pred            { TokPred _ }
+    succ            { TokSucc _ }
+    iszero          { TokIszero _ }
     "\\"            { TokLambda _ }
     "->"            { TokArrow _ }
     "."             { TokDot _ }
@@ -40,13 +44,17 @@ Expr    : "\\" var ":" Type "." Expr    { Lam (Id $2) $4 $6 }
 AppExpr : AppExpr AppRhs                { App $1 $2 }
         | AppRhs                        { $1 }
 
-AppRhs  : var                           { Var pos (Id $1) }
+AppRhs  : if Expr then Expr else Expr   { If $2 $4 $6 }
+        | let var "=" Expr in Expr      { Let (Id $2) $4 $6 }
+        | fix Expr                      { Fix $2 }
+        | pred Expr                     { Pred $2 }
+        | succ Expr                     { ESucc $2 }
+        | iszero Expr                   { Iszero $2 }
+        | var                           { Var pos (Id $1) }
         | int_literal                   { Lit pos (LitInt $1) }
         | true                          { Lit $1 (LitBool True) }
         | false                         { Lit $1 (LitBool False) }
         | "(" ")"                       { Lit (AlexPn 0 0 0) LitUnit }
-        | if Expr then Expr else Expr   { If $2 $4 $6 }
-        | let var "=" Expr in Expr      { Let (Id $2) $4 $6 }
         | "(" Expr ")"                  { $2 }
 
 Type    : Int               { TInt }

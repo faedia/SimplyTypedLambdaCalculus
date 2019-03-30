@@ -20,6 +20,10 @@ tokens :-
     else                            { \p s -> TokElse p }
     let                             { \p s -> TokLet p }
     in                              { \p s -> TokIn p }
+    fix                             { \p s -> TokFix p }
+    pred                            { \p s -> TokPred p }
+    succ                            { \p s -> TokSucc p }
+    iszero                          { \p s -> TokIszero p }
     $digit+				            { \p s -> TokInt p (read s) }
     $alpha [$alpha $digit \_ \']*   { \p s -> TokVar p s }
     \\                              { \p s -> TokLambda p }
@@ -33,7 +37,7 @@ tokens :-
 {
 data Token 
     = TokLambda AlexPosn
-    | TokInt AlexPosn Int
+    | TokInt AlexPosn Integer
     | TokVar AlexPosn String
     | TokTrue AlexPosn
     | TokFalse AlexPosn
@@ -45,6 +49,10 @@ data Token
     | TokElse AlexPosn
     | TokLet AlexPosn
     | TokIn AlexPosn
+    | TokFix AlexPosn
+    | TokPred AlexPosn
+    | TokSucc AlexPosn
+    | TokIszero AlexPosn
     | TokDot AlexPosn
     | TokLBrace AlexPosn
     | TokRBrace AlexPosn
@@ -65,6 +73,10 @@ getLoc (TokIf (AlexPn _ line col)) = (line, col)
 getLoc (TokThen (AlexPn _ line col)) = (line, col)
 getLoc (TokElse (AlexPn _ line col)) = (line, col)
 getLoc (TokLet (AlexPn _ line col)) = (line, col)
+getLoc (TokFix (AlexPn _ line col)) = (line, col)
+getLoc (TokPred (AlexPn _ line col)) = (line, col)
+getLoc (TokSucc (AlexPn _ line col)) = (line, col)
+getLoc (TokIszero (AlexPn _ line col)) = (line, col)
 getLoc (TokIn (AlexPn _ line col)) = (line, col)
 getLoc (TokDot (AlexPn _ line col)) = (line, col)
 getLoc (TokLBrace (AlexPn _ line col)) = (line, col)
@@ -87,6 +99,10 @@ instance Show Token where
     show (TokIn _) = "in"
     show (TokThen _) = "then"
     show (TokElse _) = "else"
+    show (TokFix _) = "fix"
+    show (TokPred _) = "pred"
+    show (TokSucc _) = "succ"
+    show (TokIszero _) = "iszero"
     show (TokDot _) = "."
     show (TokLBrace _) = "("
     show (TokRBrace _) = ")"

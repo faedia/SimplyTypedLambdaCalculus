@@ -27,6 +27,10 @@ instance PrettyShow Expr where
     prettyShow (Lam var t e) =
         "\\" ++ prettyShow var ++ " : " ++ prettyShow t ++ " . " ++ prettyShow e
     prettyShow (Let var e1 e2) = "let " ++ prettyShow var ++ " = " ++ prettyShow e1 ++ " in " ++ prettyShow e2
+    prettyShow (Fix e) = "fix " ++ prettyShow e
+    prettyShow (ESucc e) = "succ " ++ prettyShow e
+    prettyShow (Pred e) = "pred " ++ prettyShow e
+    prettyShow (Iszero e) = "iszero " ++ prettyShow e
     -- Here just incase a new Expr is added and a prettyShow function is not written for the new constructor
     prettyShow e = "Write prettyShow! defaulting to show: " ++ show e
 

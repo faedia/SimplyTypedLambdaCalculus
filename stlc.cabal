@@ -17,6 +17,7 @@ executable stlc
         JetContext
         JetErrorM
         Lang.Ast
+        Lang.Eval
         TypeCheck
         Parser.Lexer
         Parser.Parser

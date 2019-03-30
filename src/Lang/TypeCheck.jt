@@ -22,3 +22,7 @@ typerule TExprIf <- if {ctx} |- (Expr ep) : TBool, {ctx} |- (Expr et) : t, {ctx}
 typerule TExprApp <- if {ctx} |- (Expr e1) : TFun t1 t2, {ctx} |- (Expr e2) : t1 then (Expr App e1 e2) : t2 return {return ()};
 typerule TExprLam <- if {=<< expandContext var t1 (newBlock ctx)} |- (Expr e) : t2 then (Expr Lam var t1 e) : TFun t1 t2 return {return ()};
 typerule TExprLet <- if {ctx} |- (Expr e1) : t1, {=<< expandContext var t1 (newBlock ctx)} |- (Expr e2) : t2 then (Expr Let var e1 e2) : t2 return {return ()};
+typerule TExprFix <- if {ctx} |- (Expr e) : TFun t1 t2, {if t1 == t2 then return () else fail "Type error"} then (Expr Fix e) : t1 return {return ()};
+typerule TExprPred <- if {ctx} |- (Expr e) : TInt then (Expr Pred e) : TInt return {return ()};
+typerule TExprSucc <- if {ctx} |- (Expr e) : TInt then (Expr ESucc e) : TInt return {return ()};
+typerule TExprIszero <- if {ctx} |- (Expr e) : TInt then (Expr Iszero e) : TBool return {return ()};
